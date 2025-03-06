@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generator Danych Testowych</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Generator Danych</h1>
+    </header>
+
+    <div class="actions top-actions">
+      <button id="generateBtn" class="primary-btn">Generuj nowe dane</button>
+      <button id="copyAllBtn" class="secondary-btn">Kopiuj wszystko</button>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="personal">Dane osobowe</button>
+      <button class="tab-btn" data-tab="address">Adres</button>
+      <button class="tab-btn" data-tab="documents">Dokumenty</button>
+      <button class="tab-btn" data-tab="business">Firma</button>
+    </div>
+
+    <div class="tab-content">
+      <!-- Dane osobowe -->
+      <div class="tab-pane active" id="personal">
+        <div class="form-group">
+          <label>Imię i nazwisko</label>
+          <div class="input-group">
+            <input type="text" id="fullName" readonly>
+            <button class="copy-btn" data-target="fullName"><i class="material-icons">content_copy</i></button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>PESEL</label>
+          <div class="input-group">
+            <input type="text" id="pesel" readonly>
+            <button class="copy-btn" data-target="pesel"><i class="material-icons">content_copy</i></button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Data urodzenia</label>
+          <div class="input-group">
+            <input type="text" id="birthDate" readonly>
+            <button class="copy-btn" data-target="birthDate"><i class="material-icons">content_copy</i></button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <div class="input-group">
+            <input type="text" id="email" readonly>
+            <button class="copy-btn" data-target="email"><i class="material-icons">content_copy</i></button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Telefon</label>
+          <div class="input-group">
+            <input type="text" id="phone" readonly>
+            <button class="copy-btn" data-target="phone"><i class="material-icons">content_copy</i></button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Bank</label>
+          <div class="input-group">
+            <input type="text" id="bankName" readonly>
+            <button class="copy-btn" data-target="bankName"><i class="material-icons">content_copy</i></button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Numer rachunku (IBAN)</label>
+          <div class="input-group">
+            <input type="text" id="iban" readonly>
+            <button class="copy-btn" data-target="iban"><i class="material-icons">content_copy</i></button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Numer karty</label>
+          <div class="input-group">
+            <input type="text" id="cardNumber" readonly>
+            <button class="copy-btn" data-target="cardNumber"><i class="material-icons">content_copy</i></button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Data ważności / CVV</label>
+          <div class="input-group">
+            <input type="text" id="cardDetails" readonly>
+            <button class="copy-btn" data-target="cardDetails"><i class="material-icons">content_copy</i></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Adres -->
+      <div class="tab-pane" id="address">
+        <div class="form-group">
+          <label>Ulica i numer</label>
+          <div class="input-group">
+            <input type="text" id="street" readonly>
+            <button class="copy-btn" data-target="street"><i class="material-icons">content_copy</i></button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Kod pocztowy</label>
+          <div class="input-group">
+            <input type="text" id="postalCode" readonly>
+            <button class="copy-btn" data-target="postalCode"><i class="material-icons">content_copy</i></button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Miasto</label>
+          <div class="input-group">
+            <input type="text" id="city" readonly>
+            <button class="copy-btn" data-target="city"><i class="material-icons">content_copy</i></button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Województwo</label>
+          <div class="input-group">
+            <input type="text" id="voivodeship" readonly>
+            <button class="copy-btn" data-target="voivodeship"><i class="material-icons">content_copy</i></button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Pełny adres</label>
+          <div class="input-group">
+            <input type="text" id="fullAddress" readonly>
+            <button class="copy-btn" data-target="fullAddress"><i class="material-icons">content_copy</i></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dokumenty -->
+      <div class="tab-pane" id="documents">
+        <div class="form-group">
+          <label>Dowód osobisty</label>
+          <div class="input-group">
+            <input type="text" id="idCard" readonly>
+            <button class="copy-btn" data-target="idCard"><i class="material-icons">content_copy</i></button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Data wydania dowodu</label>
+          <div class="input-group">
+            <input type="text" id="idCardIssueDate" readonly>
+            <button class="copy-btn" data-target="idCardIssueDate"><i class="material-icons">content_copy</i></button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Data ważności dowodu</label>
+          <div class="input-group">
+            <input type="text" id="idCardExpiryDate" readonly>
+            <button class="copy-btn" data-target="idCardExpiryDate"><i class="material-icons">content_copy</i></button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Paszport</label>
+          <div class="input-group">
+            <input type="text" id="passport" readonly>
+            <button class="copy-btn" data-target="passport"><i class="material-icons">content_copy</i></button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Data wydania paszportu</label>
+          <div class="input-group">
+            <input type="text" id="passportIssueDate" readonly>
+            <button class="copy-btn" data-target="passportIssueDate"><i class="material-icons">content_copy</i></button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Data ważności paszportu</label>
+          <div class="input-group">
+            <input type="text" id="passportExpiryDate" readonly>
+            <button class="copy-btn" data-target="passportExpiryDate"><i class="material-icons">content_copy</i></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Firma -->
+      <div class="tab-pane" id="business">
+        <div class="form-group">
+          <label>Nazwa firmy</label>
+          <div class="input-group">
+            <input type="text" id="companyName" readonly>
+            <button class="copy-btn" data-target="companyName"><i class="material-icons">content_copy</i></button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>NIP</label>
+          <div class="input-group">
+            <input type="text" id="nip" readonly>
+            <button class="copy-btn" data-target="nip"><i class="material-icons">content_copy</i></button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>REGON</label>
+          <div class="input-group">
+            <input type="text" id="regon" readonly>
+            <button class="copy-btn" data-target="regon"><i class="material-icons">content_copy</i></button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>KRS</label>
+          <div class="input-group">
+            <input type="text" id="krs" readonly>
+            <button class="copy-btn" data-target="krs"><i class="material-icons">content_copy</i></button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Kod SWIFT/BIC</label>
+          <div class="input-group">
+            <input type="text" id="swift" readonly>
+            <button class="copy-btn" data-target="swift"><i class="material-icons">content_copy</i></button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Firmowy numer rachunku</label>
+          <div class="input-group">
+            <input type="text" id="companyIban" readonly>
+            <button class="copy-btn" data-target="companyIban"><i class="material-icons">content_copy</i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p>Wszystkie dane są generowane losowo i nie odpowiadają rzeczywistym osobom lub podmiotom. Wyłącznie do celów testowych.</p>
+    </footer>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/generators.js"></script>
+  <script src="js/popup.js"></script>
+</body>
+</html> 
