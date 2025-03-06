@@ -119,29 +119,40 @@ function initContextMenus() {
 
 // Obsługa kliknięcia w pozycję menu
 chrome.contextMenus.onClicked.addListener((info, tab) => {
-  // Sprawdź, czy kliknięto w pozycję menu
-  if (info.menuItemId === 'refreshData') {
-    // Wyślij komunikat do content script o odświeżenie danych
-    chrome.tabs.sendMessage(tab.id, { action: 'refreshData' });
-    return;
-  }
-  
-  // Sprawdź, czy kliknięto w pozycję z danymi
-  const [categoryId, itemId] = info.menuItemId.split('_');
-  if (categoryId && itemId) {
-    // Znajdź kategorię i pozycję
-    const category = Object.values(CATEGORIES).find(cat => cat.id === categoryId);
-    if (category) {
-      const item = category.children.find(it => it.id === itemId);
-      if (item) {
-        // Wyślij komunikat do content script o wstawienie danych
-        chrome.tabs.sendMessage(tab.id, { 
-          action: 'insertData',
-          dataType: item.title
-        });
+  // Najpierw aktywujemy uprawnienie activeTab poprzez wywołanie chrome.tabs.executeScript
+  chrome.scripting.executeScript({
+    target: { tabId: tab.id },
+    function: () => {
+      // Ta funkcja jest pusta, ale jej wywołanie aktywuje uprawnienie activeTab
+      return true;
+    }
+  }, () => {
+    // Po aktywacji uprawnienia activeTab, możemy wysłać komunikat do content script
+    
+    // Sprawdź, czy kliknięto w pozycję menu
+    if (info.menuItemId === 'refreshData') {
+      // Wyślij komunikat do content script o odświeżenie danych
+      chrome.tabs.sendMessage(tab.id, { action: 'refreshData' });
+      return;
+    }
+    
+    // Sprawdź, czy kliknięto w pozycję z danymi
+    const [categoryId, itemId] = info.menuItemId.split('_');
+    if (categoryId && itemId) {
+      // Znajdź kategorię i pozycję
+      const category = Object.values(CATEGORIES).find(cat => cat.id === categoryId);
+      if (category) {
+        const item = category.children.find(it => it.id === itemId);
+        if (item) {
+          // Wyślij komunikat do content script o wstawienie danych
+          chrome.tabs.sendMessage(tab.id, { 
+            action: 'insertData',
+            dataType: item.title
+          });
+        }
       }
     }
-  }
+  });
 });
 
 // Inicjalizacja menu kontekstowego przy instalacji lub aktualizacji rozszerzenia
