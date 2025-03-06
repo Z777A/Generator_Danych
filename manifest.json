@@ -23,18 +23,18 @@
     "activeTab",
     "scripting"
   ],
-  "content_scripts": [
-    {
-      "matches": ["http://*/*", "https://*/*"],
-      "js": [
-        "src/js/data.js",
-        "src/js/generators.js",
-        "src/js/contextMenu.js"
-      ],
-      "css": ["src/css/contextMenu.css"]
-    }
-  ],
   "background": {
     "service_worker": "src/js/background.js"
-  }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "src/js/data.js",
+        "src/js/generators.js",
+        "src/js/contextMenu.js",
+        "src/css/contextMenu.css"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ]
 } 

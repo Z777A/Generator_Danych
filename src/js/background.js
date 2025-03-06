@@ -117,42 +117,72 @@ function initContextMenus() {
   });
 }
 
+// Funkcja do dynamicznego wstrzykiwania skryptów
+async function injectScripts(tabId) {
+  // Wstrzyknij style
+  await chrome.scripting.insertCSS({
+    target: { tabId },
+    files: ['src/css/contextMenu.css']
+  });
+  
+  // Wstrzyknij skrypty w odpowiedniej kolejności
+  await chrome.scripting.executeScript({
+    target: { tabId },
+    files: ['src/js/data.js']
+  });
+  
+  await chrome.scripting.executeScript({
+    target: { tabId },
+    files: ['src/js/generators.js']
+  });
+  
+  // Na końcu wstrzyknij skrypt obsługujący menu kontekstowe
+  return chrome.scripting.executeScript({
+    target: { tabId },
+    files: ['src/js/contextMenu.js']
+  });
+}
+
+// Funkcja do obsługi akcji menu kontekstowego
+async function handleContextMenuAction(info, tab, action, dataType = null) {
+  try {
+    // Wstrzyknij skrypty, jeśli jeszcze nie zostały wstrzyknięte
+    await injectScripts(tab.id);
+    
+    // Wyślij odpowiednią akcję do content script
+    if (action === 'refreshData') {
+      chrome.tabs.sendMessage(tab.id, { action: 'refreshData' });
+    } else if (action === 'insertData' && dataType) {
+      chrome.tabs.sendMessage(tab.id, { 
+        action: 'insertData',
+        dataType
+      });
+    }
+  } catch (error) {
+    console.error('Błąd podczas obsługi akcji menu kontekstowego:', error);
+  }
+}
+
 // Obsługa kliknięcia w pozycję menu
 chrome.contextMenus.onClicked.addListener((info, tab) => {
-  // Najpierw aktywujemy uprawnienie activeTab poprzez wywołanie chrome.tabs.executeScript
-  chrome.scripting.executeScript({
-    target: { tabId: tab.id },
-    function: () => {
-      // Ta funkcja jest pusta, ale jej wywołanie aktywuje uprawnienie activeTab
-      return true;
-    }
-  }, () => {
-    // Po aktywacji uprawnienia activeTab, możemy wysłać komunikat do content script
-    
-    // Sprawdź, czy kliknięto w pozycję menu
-    if (info.menuItemId === 'refreshData') {
-      // Wyślij komunikat do content script o odświeżenie danych
-      chrome.tabs.sendMessage(tab.id, { action: 'refreshData' });
-      return;
-    }
-    
-    // Sprawdź, czy kliknięto w pozycję z danymi
-    const [categoryId, itemId] = info.menuItemId.split('_');
-    if (categoryId && itemId) {
-      // Znajdź kategorię i pozycję
-      const category = Object.values(CATEGORIES).find(cat => cat.id === categoryId);
-      if (category) {
-        const item = category.children.find(it => it.id === itemId);
-        if (item) {
-          // Wyślij komunikat do content script o wstawienie danych
-          chrome.tabs.sendMessage(tab.id, { 
-            action: 'insertData',
-            dataType: item.title
-          });
-        }
+  // Sprawdź, czy kliknięto w pozycję menu
+  if (info.menuItemId === 'refreshData') {
+    handleContextMenuAction(info, tab, 'refreshData');
+    return;
+  }
+  
+  // Sprawdź, czy kliknięto w pozycję z danymi
+  const [categoryId, itemId] = info.menuItemId.split('_');
+  if (categoryId && itemId) {
+    // Znajdź kategorię i pozycję
+    const category = Object.values(CATEGORIES).find(cat => cat.id === categoryId);
+    if (category) {
+      const item = category.children.find(it => it.id === itemId);
+      if (item) {
+        handleContextMenuAction(info, tab, 'insertData', item.title);
       }
     }
-  });
+  }
 });
 
 // Inicjalizacja menu kontekstowego przy instalacji lub aktualizacji rozszerzenia
