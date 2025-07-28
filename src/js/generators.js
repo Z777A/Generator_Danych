@@ -501,7 +501,7 @@ class PolishDataGenerator {
     return array[Math.floor(Math.random() * array.length)];
   }
 
-  // Generuje losową datę urodzenia - poprawa dla lepszej walidacji
+  // Generuje losową datę urodzenia
   generateRandomBirthDate() {
     const now = new Date();
     const minAge = 18;
