@@ -1,4 +1,4 @@
-// Klasa generatora danych
+// Data generator class
 class PolishDataGenerator {
   constructor() {
     this.person = null;
@@ -7,13 +7,13 @@ class PolishDataGenerator {
     this.documents = null;
     this.bankAccount = null;
 
-    // Inicjalizacja danych
+    // Initialize data
     this.generateAll();
   }
 
-  // Generuje wszystkie dane
+  // Generates all data
   generateAll() {
-    // Losowy wybór płci
+    // Random gender selection
     const isMale = Math.random() > 0.5;
 
     this.generatePerson(isMale);
@@ -31,19 +31,19 @@ class PolishDataGenerator {
     };
   }
 
-  // Generuje dane osobowe
+  // Generates personal data
   generatePerson(isMale = true) {
-    // Wybierz losowe imię i nazwisko
+    // Select random first name and last name
     const firstName = this.getRandomItem(isMale ? DATA.maleFirstNames : DATA.femaleFirstNames);
     const lastName = this.getRandomItem(isMale ? DATA.maleSurnames : DATA.femaleSurnames);
 
-    // Generuj PESEL
+    // Generate PESEL
     const { pesel, birthDate } = this.generatePesel(isMale);
 
-    // Generuj email
+    // Generate email
     const email = this.generateEmail(firstName, lastName);
 
-    // Generuj telefon
+    // Generate phone
     const phone = this.generatePhone();
 
     this.person = {
@@ -60,22 +60,22 @@ class PolishDataGenerator {
     return this.person;
   }
 
-  // Generuje adres
+  // Generates address
   generateAddress() {
-    // Najpierw wybierz losowe województwo
+    // First select random voivodeship
     const voivodeship = this.getRandomItem(DATA.voivodeships);
 
-    // Następnie wybierz losowe miasto z tego województwa
+    // Then select random city from that voivodeship
     const citiesInVoivodeship = DATA.citiesVoivodeships[voivodeship];
     const city = this.getRandomItem(citiesInVoivodeship);
 
-    // Generuj ulicę i numer
+    // Generate street and number
     const streetType = this.getRandomItem(DATA.streetTypes);
     const street = this.getRandomItem(DATA.streets);
     const buildingNumber = Math.floor(Math.random() * 200) + 1;
     const apartmentNumber = Math.random() > 0.3 ? Math.floor(Math.random() * 100) + 1 : null;
 
-    // Generuj kod pocztowy
+    // Generate postal code
     const postalCode = this.generatePostalCode();
 
     const streetWithNumber = apartmentNumber
@@ -97,21 +97,21 @@ class PolishDataGenerator {
     return this.address;
   }
 
-  // Generuje dokumenty
+  // Generates documents
   generateDocuments() {
-    // Generuj dowód osobisty (nowy format od 2019 roku)
+    // Generate ID card (new format from 2019)
     const idCardSeries = this.generateRandomLetters(3).toUpperCase();
     const idCardNumber = this.generateRandomDigits(4);
 
-    // Obliczanie cyfry kontrolnej dla dowodu osobistego
-    // Algorytm walidacji zgodny z polskimi standardami
+    // Calculate check digit for ID card
+    // Validation algorithm compliant with Polish standards
     const weights = [7, 3, 1, 9, 7, 3, 1, 7, 3];
     const idCardChars = (idCardSeries + idCardNumber).split('');
     let sum = 0;
 
     for (let i = 0; i < idCardChars.length; i++) {
       const char = idCardChars[i];
-      // Dla liter używamy ich kodu ASCII - 55 (A=10, B=11, itd.)
+      // For letters we use their ASCII code - 55 (A=10, B=11, etc.)
       const value = /[A-Z]/.test(char) ? char.charCodeAt(0) - 55 : parseInt(char);
       sum += value * weights[i];
     }
@@ -119,40 +119,40 @@ class PolishDataGenerator {
     const checkDigit = sum % 10;
     const idCard = `${idCardSeries}${idCardNumber}`;
 
-    // Generuj daty dla dowodu
+    // Generate dates for ID card
     const idCardIssueDate = this.generatePastDate(5);
 
-    // Data ważności dokładnie 10 lat po dacie wydania
+    // Expiry date exactly 10 years after issue date
     const idCardExpiryDate = new Date(idCardIssueDate);
     idCardExpiryDate.setFullYear(idCardIssueDate.getFullYear() + 10);
 
-    // Generuj paszport
-    // Format paszportu: 2 litery + 7 cyfr (np. AB1234567)
+    // Generate passport
+    // Passport format: 2 letters + 7 digits (e.g. AB1234567)
     const passportSeries = this.generateRandomLetters(2).toUpperCase();
     const passportNumber = this.generateRandomDigits(7);
 
-    // Walidacja paszportu - implementacja algorytmu kontrolnego
-    // Wagi dla poszczególnych pozycji w paszporcie
+    // Passport validation - check digit algorithm implementation
+    // Weights for individual positions in passport
     const passportWeights = [7, 3, 9, 1, 7, 3, 1, 7, 3];
     const passportChars = (passportSeries + passportNumber).split('');
     let passportSum = 0;
 
     for (let i = 0; i < passportChars.length; i++) {
       const char = passportChars[i];
-      // Dla liter używamy ich kodu ASCII - 55 (A=10, B=11, itd.)
+      // For letters we use their ASCII code - 55 (A=10, B=11, etc.)
       const value = /[A-Z]/.test(char) ? char.charCodeAt(0) - 55 : parseInt(char);
       passportSum += value * passportWeights[i];
     }
 
-    // Cyfra kontrolna dla paszportu
+    // Check digit for passport
     const passportCheckDigit = passportSum % 10;
-    // Ostateczny format paszportu: seria + numer
+    // Final passport format: series + number
     const passport = `${passportSeries}${passportNumber}`;
 
-    // Generuj daty dla paszportu
+    // Generate dates for passport
     const passportIssueDate = this.generatePastDate(5);
 
-    // Data ważności paszportu - dokładnie 10 lat od daty wydania
+    // Passport expiry date - exactly 10 years from issue date
     const passportExpiryDate = new Date(passportIssueDate);
     passportExpiryDate.setFullYear(passportIssueDate.getFullYear() + 10);
 
@@ -168,24 +168,24 @@ class PolishDataGenerator {
     return this.documents;
   }
 
-  // Generuje dane firmy
+  // Generates company data
   generateCompany() {
-    // Generuj nazwę firmy
+    // Generate company name
     const prefix = this.getRandomItem(DATA.companyPrefixes);
     const root = this.getRandomItem(DATA.companyRoots);
     const suffix = this.getRandomItem(DATA.companySuffixes);
     const companyName = `${prefix}${root} ${suffix}`;
 
-    // Generuj NIP
+    // Generate NIP
     const nip = this.generateNIP();
 
-    // Generuj REGON
+    // Generate REGON
     const regon = this.generateREGON();
 
-    // Generuj KRS
+    // Generate KRS
     const krs = this.generateRandomDigits(10);
 
-    // Generuj firmowy rachunek bankowy
+    // Generate company bank account
     const bank = this.getRandomBank();
     const companyIban = this.generateIBAN(bank);
 
@@ -203,22 +203,22 @@ class PolishDataGenerator {
     return this.company;
   }
 
-  // Generuje PESEL
+  // Generates PESEL
   generatePesel(isMale = true) {
-    // Generuj datę urodzenia
+    // Generate birth date
     const birthDate = this.generateRandomBirthDate();
     const year = birthDate.getFullYear();
     const month = birthDate.getMonth() + 1;
     const day = birthDate.getDate();
 
-    // Pierwsze 6 cyfr to data urodzenia
+    // First 6 digits are the birth date
     let pesel = '';
 
-    // Rok - ostatnie dwie cyfry
+    // Year - last two digits
     const yearStr = year.toString().slice(-2);
     pesel += yearStr;
 
-    // Miesiąc - z modyfikacją zależną od stulecia
+    // Month - with modification depending on century
     let monthCode = month;
     if (year >= 2000 && year < 2100) {
       monthCode += 20;
@@ -229,17 +229,17 @@ class PolishDataGenerator {
     }
     pesel += monthCode.toString().padStart(2, '0');
 
-    // Dzień
+    // Day
     pesel += day.toString().padStart(2, '0');
 
-    // Losowy numer seryjny (3 cyfry, nie 4!)
+    // Random serial number (3 digits, not 4!)
     pesel += this.generateRandomDigits(3);
 
-    // Cyfra płci (nieparzysta dla mężczyzn, parzysta dla kobiet)
+    // Gender digit (odd for males, even for females)
     const genderDigit = isMale ? this.getRandomOddDigit() : this.getRandomEvenDigit();
     pesel += genderDigit;
 
-    // Cyfra kontrolna
+    // Check digit
     const weights = [1, 3, 7, 9, 1, 3, 7, 9, 1, 3];
     let sum = 0;
 
@@ -247,7 +247,7 @@ class PolishDataGenerator {
       sum += parseInt(pesel[i]) * weights[i];
     }
 
-    // algorytm cyfry kontrolnej dla PESEL
+    // Check digit algorithm for PESEL
     const remainder = sum % 10;
     const checkDigit = remainder === 0 ? 0 : 10 - remainder;
     pesel += checkDigit;
@@ -258,18 +258,18 @@ class PolishDataGenerator {
     };
   }
 
-  // Generuje NIP
+  // Generates NIP
   generateNIP() {
-    // 3 cyfry - urząd skarbowy
+    // 3 digits - tax office
     const officeCode = Math.floor(Math.random() * 900) + 100;
 
-    // 6 cyfr - numer seryjny
+    // 6 digits - serial number
     const serialNumber = this.generateRandomDigits(6);
 
-    // Łączymy
+    // Combine them
     let nip = `${officeCode}${serialNumber}`;
 
-    // Obliczamy cyfrę kontrolną
+    // Calculate check digit
     const weights = [6, 5, 7, 2, 3, 4, 5, 6, 7];
     let sum = 0;
 
@@ -280,16 +280,16 @@ class PolishDataGenerator {
     const checkDigit = sum % 11 === 10 ? 0 : sum % 11;
     nip += checkDigit;
 
-    // Format NIP: XXXXXXXXX
+    // NIP format: XXXXXXXXX
     return `${nip.slice(0, 3)}${nip.slice(3, 6)}${nip.slice(6, 8)}${nip.slice(8, 10)}`;
   }
 
-  // Generuje REGON
+  // Generates REGON
   generateREGON() {
-    // 8 cyfr - numer seryjny
+    // 8 digits - serial number
     let regon = this.generateRandomDigits(8);
 
-    // Obliczamy cyfrę kontrolną
+    // Calculate check digit
     const weights = [8, 9, 2, 3, 4, 5, 6, 7];
     let sum = 0;
 
@@ -300,20 +300,20 @@ class PolishDataGenerator {
     const checkDigit = sum % 11 === 10 ? 0 : sum % 11;
     regon += checkDigit;
 
-    // Format REGON: XXXXXXXXX
+    // REGON format: XXXXXXXXX
     return `${regon.slice(0, 3)}${regon.slice(3, 6)}${regon.slice(6, 9)}`;
   }
 
-  // Generuje email
+  // Generates email
   generateEmail(firstName, lastName) {
-    // Usuń polskie znaki
+    // Remove Polish characters
     const normalizedFirstName = this.normalizeString(firstName.toLowerCase());
     const normalizedLastName = this.normalizeString(lastName.toLowerCase());
 
-    // Wybierz losową domenę
+    // Select random domain
     const domain = this.getRandomItem(DATA.emailDomains);
 
-    // Losowy format emaila
+    // Random email format
     const formats = [
       `${normalizedFirstName}.${normalizedLastName}@${domain}`,
       `${normalizedFirstName}${normalizedLastName}@${domain}`,
@@ -325,20 +325,20 @@ class PolishDataGenerator {
     return this.getRandomItem(formats);
   }
 
-  // Generuje numer telefonu
+  // Generates phone number
   generatePhone() {
-    // Prefiksy polskich operatorów komórkowych
+    // Polish mobile operators prefixes
     const mobilePrefixes = ['50', '51', '53', '57', '60', '66', '69', '72', '73', '78', '79', '88'];
     const prefix = this.getRandomItem(mobilePrefixes);
 
-    // 7 losowych cyfr
+    // 7 random digits
     const number = this.generateRandomDigits(7);
 
     // Format: XXXXXXXXX
     return `${prefix}${number[0]}${number.slice(1, 4)}${number.slice(4, 7)}`;
   }
 
-  // Generuje kod pocztowy
+  // Generates postal code
   generatePostalCode() {
     const firstPart = Math.floor(Math.random() * 100).toString().padStart(2, '0');
     const secondPart = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
@@ -346,24 +346,24 @@ class PolishDataGenerator {
     return `${firstPart}-${secondPart}`;
   }
 
-  // Generuje dane bankowe
+  // Generates bank data
   generateBankAccount() {
-    // Wybierz losowy bank
+    // Select random bank
     const bank = this.getRandomBank();
 
-    // Generuj numer rachunku bankowego (IBAN dla Polski)
+    // Generate bank account number (IBAN for Poland)
     const iban = this.generateIBAN(bank);
 
-    // Generuj numer karty
+    // Generate card number
     const cardNumber = this.generateCardNumber(bank.cardPrefix);
 
-    // Generuj datę ważności karty
+    // Generate card expiry date
     const expiryDate = this.generateCardExpiryDate();
 
-    // Generuj kod CVV
+    // Generate CVV code
     const cvv = this.generateCVV();
 
-    // Generuj numer SWIFT/BIC
+    // Generate SWIFT/BIC number
     const swift = bank.swift;
 
     this.bankAccount = {
@@ -380,50 +380,50 @@ class PolishDataGenerator {
     return this.bankAccount;
   }
 
-  // Generuje numer IBAN dla Polski
+  // Generates IBAN number for Poland
   generateIBAN(bank) {
-    // Kod kraju (PL) + 2 cyfry kontrolne + 8 cyfr numeru rozliczeniowego banku + 16 cyfr numeru rachunku
+    // Country code (PL) + 2 check digits + 8 digits of bank sort code + 16 digits of account number
 
-    // Użyj kodu banku z obiektu bank
+    // Use bank code from bank object
     const bankCode = bank.bankCode;
 
-    // Generuj 16 cyfr numeru rachunku
+    // Generate 16 digits of account number
     const accountNumber = this.generateRandomDigits(16);
 
-    // Połącz numer rozliczeniowy i numer rachunku
+    // Combine sort code and account number
     const bban = bankCode + accountNumber;
 
-    // Oblicz cyfry kontrolne
-    // Konwertuj PL na liczby (P=25, L=21) i dodaj '00' na końcu
+    // Calculate check digits
+    // Convert PL to numbers (P=25, L=21) and add '00' at the end
     const countryCode = '252100';
     const checkDigits = this.calculateIBANCheckDigits(bban + countryCode);
 
-    // Pełny numer IBAN
+    // Full IBAN number
     return 'PL' + checkDigits + bban;
   }
 
-  // Oblicza cyfry kontrolne IBAN
+  // Calculates IBAN check digits
   calculateIBANCheckDigits(digits) {
-    // Konwertuj ciąg znaków na liczbę modulo 97
+    // Convert string to number modulo 97
     let remainder = 0;
     for (let i = 0; i < digits.length; i++) {
       remainder = (remainder * 10 + parseInt(digits[i])) % 97;
     }
 
-    // Oblicz cyfry kontrolne (98 - remainder) % 97
+    // Calculate check digits (98 - remainder) % 97
     const checkDigits = (98 - remainder) % 97;
 
-    // Zwróć cyfry kontrolne jako dwucyfrowy ciąg znaków
+    // Return check digits as two-digit string
     return checkDigits.toString().padStart(2, '0');
   }
 
-  // Formatuje numer IBAN do czytelnej postaci
+  // Formats IBAN number to readable form
   formatIBAN(iban) {
     // Format: PL00 0000 0000 0000 0000 0000 0000
     return iban.replace(/(.{2})(.{2})(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})/, '$1$2 $3 $4 $5 $6 $7 $8');
   }
 
-  // Zwraca losowy bank z listy polskich banków
+  // Returns random bank from list of Polish banks
   getRandomBank() {
     const banks = [
       { name: 'PKO Bank Polski', swift: 'BPKOPLPW', cardPrefix: '5164', bankCode: '10201010' },
@@ -441,22 +441,22 @@ class PolishDataGenerator {
     return this.getRandomItem(banks);
   }
 
-  // Generuje numer karty płatniczej
+  // Generates payment card number
   generateCardNumber(prefix) {
-    // Prefix + losowe cyfry (łącznie 16 cyfr)
+    // Prefix + random digits (16 digits total)
     let cardNumber = prefix;
     const remainingDigits = 16 - prefix.length;
 
     cardNumber += this.generateRandomDigits(remainingDigits - 1);
 
-    // Dodaj cyfrę kontrolną (algorytm Luhna)
+    // Add check digit (Luhn algorithm)
     const digits = cardNumber.split('').map(Number);
     let sum = 0;
 
     for (let i = 0; i < digits.length; i++) {
       let digit = digits[i];
 
-      // Co druga cyfra (od prawej) jest podwajana
+      // Every second digit (from right) is doubled
       if ((digits.length - i) % 2 === 0) {
         digit *= 2;
         if (digit > 9) {
@@ -473,35 +473,35 @@ class PolishDataGenerator {
     return cardNumber;
   }
 
-  // Formatuje numer karty do czytelnej postaci
+  // Formats card number to readable form
   formatCardNumber(cardNumber) {
     // Format: XXXX XXXX XXXX XXXX
     return cardNumber.replace(/(.{4})(.{4})(.{4})(.{4})/, '$1 $2 $3 $4');
   }
 
-  // Generuje datę ważności karty
+  // Generates card expiry date
   generateCardExpiryDate() {
     const today = new Date();
     const month = today.getMonth() + 1;
-    let year = today.getFullYear() + Math.floor(Math.random() * 4) + 1; // 1-5 lat w przyszłości
-    year = year % 100; // Tylko ostatnie 2 cyfry roku
+    let year = today.getFullYear() + Math.floor(Math.random() * 4) + 1; // 1-5 years in the future
+    year = year % 100; // Only last 2 digits of year
 
     return `${month.toString().padStart(2, '0')}/${year.toString().padStart(2, '0')}`;
   }
 
-  // Generuje kod CVV
+  // Generates CVV code
   generateCVV() {
     return this.generateRandomDigits(3);
   }
 
-  // Pomocnicze metody
+  // Helper methods
 
-  // Wybiera losowy element z tablicy
+  // Selects random element from array
   getRandomItem(array) {
     return array[Math.floor(Math.random() * array.length)];
   }
 
-  // Generuje losową datę urodzenia
+  // Generates random birth date
   generateRandomBirthDate() {
     const now = new Date();
     const minAge = 18;
@@ -513,14 +513,14 @@ class PolishDataGenerator {
     const year = Math.floor(Math.random() * (maxYear - minYear + 1)) + minYear;
     const month = Math.floor(Math.random() * 12);
 
-    // Poprawne generowanie dnia - uwzględnia różne długości miesięcy
+    // Correct day generation - accounts for different month lengths
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const day = Math.floor(Math.random() * daysInMonth) + 1;
 
     return new Date(year, month, day);
   }
 
-  // Generuje losową datę w przeszłości
+  // Generates random date in the past
   generatePastDate(maxYearsAgo) {
     const now = new Date();
     const yearsAgo = Math.random() * maxYearsAgo;
@@ -529,7 +529,7 @@ class PolishDataGenerator {
     return pastDate;
   }
 
-  // Generuje losową datę w przyszłości
+  // Generates random date in the future
   generateFutureDate(maxYearsAhead) {
     const now = new Date();
     const yearsAhead = Math.random() * maxYearsAhead;
@@ -538,7 +538,7 @@ class PolishDataGenerator {
     return futureDate;
   }
 
-  // Formatuje datę do formatu DD-MM-YYYY
+  // Formats date to DD-MM-YYYY format
   formatDate(date) {
     const day = date.getDate().toString().padStart(2, '0');
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -547,7 +547,7 @@ class PolishDataGenerator {
     return `${day}-${month}-${year}`;
   }
 
-  // Generuje losowe cyfry
+  // Generates random digits
   generateRandomDigits(length) {
     let result = '';
     for (let i = 0; i < length; i++) {
@@ -556,7 +556,7 @@ class PolishDataGenerator {
     return result;
   }
 
-  // Generuje losowe litery
+  // Generates random letters
   generateRandomLetters(length) {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     let result = '';
@@ -566,19 +566,19 @@ class PolishDataGenerator {
     return result;
   }
 
-  // Zwraca losową nieparzystą cyfrę
+  // Returns random odd digit
   getRandomOddDigit() {
     const oddDigits = [1, 3, 5, 7, 9];
     return oddDigits[Math.floor(Math.random() * oddDigits.length)].toString();
   }
 
-  // Zwraca losową parzystą cyfrę
+  // Returns random even digit
   getRandomEvenDigit() {
     const evenDigits = [0, 2, 4, 6, 8];
     return evenDigits[Math.floor(Math.random() * evenDigits.length)].toString();
   }
 
-  // Normalizuje string (usuwa polskie znaki)
+  // Normalizes string (removes Polish characters)
   normalizeString(str) {
     return str
       .replace(/ą/g, 'a')
@@ -593,5 +593,5 @@ class PolishDataGenerator {
   }
 }
 
-// Eksportuj generator
+// Export generator
 window.PolishDataGenerator = PolishDataGenerator; 

@@ -1,14 +1,14 @@
 /**
- * Skrypt obsługujący wstawianie danych z menu kontekstowego przeglądarki
+ * Script for handling data insertion from browser context menu
  */
 
-// Inicjalizacja generatora danych
+// Initialize data generator
 let dataGenerator = new PolishDataGenerator();
 dataGenerator.generateAll();
 
-// Typy danych, które można wstawić
+// Data types that can be inserted
 const DATA_TYPES = {
-  // Dane osobowe
+  // Personal data
   'Imię i nazwisko': 'FULL_NAME',
   'Imię': 'FIRST_NAME',
   'Nazwisko': 'LAST_NAME',
@@ -16,54 +16,54 @@ const DATA_TYPES = {
   'Data urodzenia': 'BIRTH_DATE',
   'Email': 'EMAIL',
   'Telefon': 'PHONE',
-  
-  // Adres
+
+  // Address
   'Ulica i numer': 'STREET',
   'Kod pocztowy': 'POSTAL_CODE',
   'Miasto': 'CITY',
   'Województwo': 'VOIVODESHIP',
   'Pełny adres': 'FULL_ADDRESS',
-  
-  // Dokumenty
+
+  // Documents
   'Dowód osobisty': 'ID_CARD',
   'Data wydania dowodu': 'ID_CARD_ISSUE_DATE',
   'Data ważności dowodu': 'ID_CARD_EXPIRY_DATE',
   'Paszport': 'PASSPORT',
   'Data wydania paszportu': 'PASSPORT_ISSUE_DATE',
   'Data ważności paszportu': 'PASSPORT_EXPIRY_DATE',
-  
-  // Dane bankowe
+
+  // Bank data
   'Nazwa banku': 'BANK_NAME',
   'Numer rachunku (IBAN)': 'IBAN',
   'Numer karty': 'CARD_NUMBER',
   'Data ważności karty': 'CARD_EXPIRY',
   'Kod CVV': 'CVV',
-  
-  // Firma
+
+  // Company
   'Nazwa firmy': 'COMPANY_NAME',
   'NIP': 'NIP',
   'REGON': 'REGON',
   'KRS': 'KRS'
 };
 
-// Funkcja odświeżająca generator danych
+// Function to refresh data generator
 function refreshGenerator() {
   dataGenerator = new PolishDataGenerator();
   dataGenerator.generateAll();
-  console.log('✨ Wygenerowano nowe dane testowe!');
+  console.log('✨ New test data generated!');
 }
 
-// Funkcja pobierająca dane na podstawie wybranego typu
+// Function to get data based on selected type
 function getDataByType(type) {
   const dataType = DATA_TYPES[type];
-  
+
   if (!dataType) {
-    console.error(`Nieznany typ danych: ${type}`);
+    console.error(`Unknown data type: ${type}`);
     return '';
   }
-  
+
   switch (dataType) {
-    // Dane osobowe
+    // Personal data
     case 'FULL_NAME':
       return dataGenerator.person.fullName;
     case 'FIRST_NAME':
@@ -78,8 +78,8 @@ function getDataByType(type) {
       return dataGenerator.person.email;
     case 'PHONE':
       return dataGenerator.person.phone;
-    
-    // Adres
+
+    // Address
     case 'STREET':
       return dataGenerator.address.streetWithNumber;
     case 'POSTAL_CODE':
@@ -90,8 +90,8 @@ function getDataByType(type) {
       return dataGenerator.address.voivodeship;
     case 'FULL_ADDRESS':
       return dataGenerator.address.fullAddress;
-    
-    // Dokumenty
+
+    // Documents
     case 'ID_CARD':
       return dataGenerator.documents.idCard;
     case 'ID_CARD_ISSUE_DATE':
@@ -104,8 +104,8 @@ function getDataByType(type) {
       return dataGenerator.documents.passportIssueDate;
     case 'PASSPORT_EXPIRY_DATE':
       return dataGenerator.documents.passportExpiryDate;
-    
-    // Dane bankowe
+
+    // Bank data
     case 'BANK_NAME':
       return dataGenerator.bankAccount.bank;
     case 'IBAN':
@@ -116,8 +116,8 @@ function getDataByType(type) {
       return dataGenerator.bankAccount.expiryDate;
     case 'CVV':
       return dataGenerator.bankAccount.cvv;
-    
-    // Firma
+
+    // Company
     case 'COMPANY_NAME':
       return dataGenerator.company.companyName;
     case 'NIP':
@@ -126,48 +126,48 @@ function getDataByType(type) {
       return dataGenerator.company.regon;
     case 'KRS':
       return dataGenerator.company.krs;
-    
+
     default:
       return '';
   }
 }
 
-// Funkcja wstawiająca dane do aktywnego elementu
+// Function to insert data into active element
 function insertDataToActiveElement(data) {
-  // Pobierz aktywny element
+  // Get active element
   const activeElement = document.activeElement;
-  
+
   if (activeElement) {
-    // Sprawdź typ elementu i odpowiednio ustaw wartość
+    // Check element type and set value accordingly
     if (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA') {
       activeElement.value = data;
-      // Wywołaj zdarzenie input, aby powiadomić stronę o zmianie wartości
+      // Trigger input event to notify the page about value change
       activeElement.dispatchEvent(new Event('input', { bubbles: true }));
       activeElement.dispatchEvent(new Event('change', { bubbles: true }));
-      
-      // Dodaj klasę animacji sukcesu
+
+      // Add success animation class
       activeElement.classList.add('polish-data-insert-success');
       setTimeout(() => {
         activeElement.classList.remove('polish-data-insert-success');
       }, 1000);
     } else if (activeElement.isContentEditable) {
       activeElement.textContent = data;
-      // Wywołaj zdarzenie input, aby powiadomić stronę o zmianie wartości
+      // Trigger input event to notify the page about value change
       activeElement.dispatchEvent(new Event('input', { bubbles: true }));
     }
   }
 }
 
-// Nasłuchuj na komunikaty z background script
+// Listen for messages from background script
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  // Obsługa odświeżania danych
+  // Handle data refresh
   if (message.action === 'refreshData') {
     refreshGenerator();
     sendResponse({ success: true });
     return;
   }
-  
-  // Obsługa wstawiania danych
+
+  // Handle data insertion
   if (message.action === 'insertData' && message.dataType) {
     const data = getDataByType(message.dataType);
     if (data) {

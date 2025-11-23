@@ -1,8 +1,8 @@
 /**
- * Dane do generowania polskich danych testowych
+ * Data for generating Polish test data
  */
 const DATA = {
-  // Imiona męskie
+  // Male first names
   maleFirstNames: [
     'Adam', 'Aleksander', 'Andrzej', 'Antoni', 'Artur', 'Bartosz', 'Błażej', 'Cezary',
     'Damian', 'Daniel', 'Dariusz', 'Dawid', 'Dominik', 'Filip', 'Franciszek', 'Grzegorz',
@@ -19,8 +19,8 @@ const DATA = {
     'Nikodem', 'Oliwier', 'Remigiusz', 'Ryszard', 'Seweryn', 'Teodor', 'Tymon', 'Wincenty',
     'Zenon', 'Zygmunt'
   ],
-  
-  // Imiona żeńskie
+
+  // Female first names
   femaleFirstNames: [
     'Agata', 'Agnieszka', 'Aleksandra', 'Alicja', 'Amelia', 'Anastazja', 'Aneta', 'Angelika',
     'Anna', 'Barbara', 'Beata', 'Bogumiła', 'Bożena', 'Cecylia', 'Dagmara', 'Danuta',
@@ -38,8 +38,8 @@ const DATA = {
     'Milena', 'Nadia', 'Nikola', 'Nina', 'Olga', 'Pola', 'Regina', 'Roksana',
     'Rozalia', 'Sabina', 'Sara', 'Sonia', 'Stella', 'Tamara', 'Wanda', 'Żaneta'
   ],
-  
-  // Nazwiska męskie
+
+  // Male surnames
   maleSurnames: [
     'Nowak', 'Kowalski', 'Wiśniewski', 'Wójcik', 'Kowalczyk', 'Kamiński', 'Lewandowski', 'Zieliński',
     'Szymański', 'Woźniak', 'Dąbrowski', 'Kozłowski', 'Jankowski', 'Mazur', 'Kwiatkowski', 'Krawczyk',
@@ -59,8 +59,8 @@ const DATA = {
     'Kaczor', 'Kurek', 'Lipski', 'Małek', 'Mróz', 'Niemiec', 'Owczarek', 'Pająk',
     'Ratajczak', 'Sobolewski', 'Stasiak', 'Szczęsny', 'Tomczyk', 'Walkowiak', 'Zawada'
   ],
-  
-  // Nazwiska żeńskie
+
+  // Female surnames
   femaleSurnames: [
     'Nowak', 'Kowalska', 'Wiśniewska', 'Wójcik', 'Kowalczyk', 'Kamińska', 'Lewandowska', 'Zielińska',
     'Szymańska', 'Woźniak', 'Dąbrowska', 'Kozłowska', 'Jankowska', 'Mazur', 'Kwiatkowska', 'Krawczyk',
@@ -80,8 +80,8 @@ const DATA = {
     'Kaczor', 'Kurek', 'Lipska', 'Małek', 'Mróz', 'Niemiec', 'Owczarek', 'Pająk',
     'Ratajczak', 'Sobolewska', 'Stasiak', 'Szczęsna', 'Tomczyk', 'Walkowiak', 'Zawada'
   ],
-  
-  // Ulice
+
+  // Streets
   streets: [
     'Mickiewicza', 'Słowackiego', 'Kościuszki', 'Sienkiewicza', 'Piłsudskiego', 'Kopernika',
     'Matejki', 'Chopina', 'Wyspiańskiego', 'Reymonta', 'Prusa', 'Konopnickiej', 'Norwida',
@@ -101,8 +101,8 @@ const DATA = {
     'Fiołkowa', 'Różana', 'Tulipanowa', 'Liliowa', 'Stokrotkowa', 'Chabrowa', 'Makowa', 'Konwaliowa',
     'Irysowa', 'Jaśminowa', 'Lawendowa', 'Nagietkowa', 'Sasankowa', 'Wrzosowa', 'Kalinowa', 'Bzowa'
   ],
-  
-  // Miasta
+
+  // Cities
   cities: [
     'Warszawa', 'Kraków', 'Łódź', 'Wrocław', 'Poznań', 'Gdańsk', 'Szczecin', 'Bydgoszcz',
     'Lublin', 'Białystok', 'Katowice', 'Gdynia', 'Częstochowa', 'Radom', 'Sosnowiec',
@@ -123,15 +123,15 @@ const DATA = {
     'Żagań', 'Żyrardów', 'Biłgoraj', 'Bolesławiec', 'Chojnice', 'Dzierżoniów', 'Goleniów', 'Gryfino',
     'Jasło', 'Kamienna Góra', 'Krapkowice', 'Lubliniec', 'Mrągowo', 'Nowa Ruda', 'Ostróda', 'Polkowice'
   ],
-  
-  // Województwa
+
+  // Voivodeships
   voivodeships: [
     'Dolnośląskie', 'Kujawsko-pomorskie', 'Lubelskie', 'Lubuskie', 'Łódzkie', 'Małopolskie',
     'Mazowieckie', 'Opolskie', 'Podkarpackie', 'Podlaskie', 'Pomorskie', 'Śląskie',
     'Świętokrzyskie', 'Warmińsko-mazurskie', 'Wielkopolskie', 'Zachodniopomorskie'
   ],
-  
-  // Mapowanie miast do województw
+
+  // Mapping cities to voivodeships
   citiesVoivodeships: {
     'Dolnośląskie': ['Wrocław', 'Wałbrzych', 'Legnica', 'Jelenia Góra', 'Lubin', 'Głogów', 'Świdnica', 'Bolesławiec', 'Oleśnica', 'Dzierżoniów', 'Kamienna Góra', 'Nowa Ruda'],
     'Kujawsko-pomorskie': ['Bydgoszcz', 'Toruń', 'Włocławek', 'Grudziądz', 'Inowrocław', 'Brodnica', 'Nakło nad Notecią'],
@@ -150,14 +150,14 @@ const DATA = {
     'Wielkopolskie': ['Poznań', 'Kalisz', 'Konin', 'Piła', 'Ostrów Wielkopolski', 'Gniezno', 'Leszno', 'Jarocin', 'Turek'],
     'Zachodniopomorskie': ['Szczecin', 'Koszalin', 'Stargard', 'Goleniów', 'Gryfino']
   },
-  
-  // Domeny email
+
+  // Email domains
   emailDomains: [
     'gmail.com', 'wp.pl', 'onet.pl', 'interia.pl', 'o2.pl', 'yahoo.com', 'hotmail.com',
     'outlook.com', 'protonmail.com', 'icloud.com', 'poczta.fm', 'gazeta.pl', 'tlen.pl'
   ],
-  
-  // Prefiksy nazw firm
+
+  // Company name prefixes
   companyPrefixes: [
     'Pol', 'Euro', 'Trans', 'Inter', 'Mega', 'Super', 'Eko', 'Bio', 'Tech', 'Bud',
     'Info', 'Auto', 'Agro', 'Med', 'Art', 'Pro', 'Net', 'Soft', 'Web', 'Cyber',
@@ -167,8 +167,8 @@ const DATA = {
     'Eco', 'Green', 'Solar', 'Wind', 'Geo', 'Aqua', 'Aero', 'Astro', 'Cosmo', 'Terra',
     'Nova', 'Prima', 'Ultra', 'Extra', 'Hyper', 'Turbo', 'Rapid', 'Fast', 'Quick', 'Speed'
   ],
-  
-  // Rdzenie nazw firm
+
+  // Company name roots
   companyRoots: [
     'Serwis', 'Handel', 'Logistyka', 'Consulting', 'Projekt', 'System', 'Market', 'Produkt',
     'Inwest', 'Budowa', 'Montaż', 'Naprawa', 'Sprzedaż', 'Wynajem', 'Usługi', 'Eksport',
@@ -181,8 +181,8 @@ const DATA = {
     'Ochrona', 'Bezpieczeństwo', 'Monitoring', 'Informatyka', 'Programowanie', 'Hosting', 'Media', 'Reklama',
     'Marketing', 'Promocja', 'Design', 'Grafika', 'Druk', 'Wydawnictwo', 'Gastronomia', 'Catering'
   ],
-  
-  // Sufiksy nazw firm
+
+  // Company name suffixes
   companySuffixes: [
     'Sp. z o.o.', 'S.A.', 'Sp.j.', 'Sp.k.', 'S.K.A.', 'Sp. p.', 'Sp. c.', 'i Wspólnicy',
     'Group', 'Polska', 'Poland', 'Plus', 'Pro', 'Solutions', 'Systems', 'Services',
@@ -195,13 +195,13 @@ const DATA = {
     'Healthcare', 'Medical', 'Pharma', 'Biotech', 'Research', 'Labs', 'Science', 'Engineering',
     'Construction', 'Properties', 'Estate', 'Logistics', 'Transport', 'Shipping', 'Express'
   ],
-  
-  // Typy ulic
+
+  // Street types
   streetTypes: [
     'ul.', 'al.', 'pl.', 'os.', 'Rondo', 'Skwer', 'Bulwar', 'Szosa', 'Droga'
   ],
-  
-  // Serie dowodów osobistych
+
+  // ID card series
   idCardSeries: [
     'AAA', 'ABA', 'ACA', 'ADA', 'AEA', 'AFA', 'AGA', 'AHA', 'AIA', 'AJA',
     'AKA', 'ALA', 'AMA', 'ANA', 'AOA', 'APA', 'ARA', 'ASA', 'ATA', 'AUA',
@@ -214,5 +214,5 @@ const DATA = {
   ]
 };
 
-// Eksportuj dane
+// Export data
 window.DATA = DATA; 

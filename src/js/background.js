@@ -1,9 +1,9 @@
 /**
- * Background script dla rozszerzenia Generator Danych
- * Odpowiada za tworzenie pozycji w menu kontekstowym przeglądarki
+ * Background script for the Data Generator extension
+ * Responsible for creating context menu items in the browser
  */
 
-// Kategorie danych
+// Data categories
 const CATEGORIES = {
   PERSONAL: {
     id: 'personal',
@@ -64,48 +64,48 @@ const CATEGORIES = {
   }
 };
 
-// Główny kontekst menu - tylko dla pól tekstowych
+// Main menu context - only for text fields
 const CONTEXT_TYPES = ['editable'];
 
-// Funkcja inicjalizująca menu kontekstowe
+// Function to initialize context menu
 function initContextMenus() {
-  // Usuń wszystkie istniejące pozycje menu
+  // Remove all existing menu items
   chrome.contextMenus.removeAll();
-  
-  // Utwórz główną pozycję menu
+
+  // Create main menu item
   chrome.contextMenus.create({
     id: 'polishDataGenerator',
     title: 'Wstaw dane testowe',
     contexts: CONTEXT_TYPES
   });
-  
-  // Utwórz pozycję do odświeżania danych
+
+  // Create refresh data menu item
   chrome.contextMenus.create({
     id: 'refreshData',
     parentId: 'polishDataGenerator',
     title: '🔄 Wygeneruj nowe dane',
     contexts: CONTEXT_TYPES
   });
-  
-  // Dodaj separator
+
+  // Add separator
   chrome.contextMenus.create({
     id: 'separator1',
     parentId: 'polishDataGenerator',
     type: 'separator',
     contexts: CONTEXT_TYPES
   });
-  
-  // Utwórz kategorie i ich pozycje
+
+  // Create categories and their items
   Object.values(CATEGORIES).forEach(category => {
-    // Utwórz kategorię
+    // Create category
     chrome.contextMenus.create({
       id: category.id,
       parentId: 'polishDataGenerator',
       title: category.title,
       contexts: CONTEXT_TYPES
     });
-    
-    // Utwórz pozycje w kategorii
+
+    // Create items in category
     category.children.forEach(item => {
       chrome.contextMenus.create({
         id: `${category.id}_${item.id}`,
@@ -117,64 +117,64 @@ function initContextMenus() {
   });
 }
 
-// Funkcja do dynamicznego wstrzykiwania skryptów
+// Function for dynamically injecting scripts
 async function injectScripts(tabId) {
-  // Wstrzyknij style
+  // Inject styles
   await chrome.scripting.insertCSS({
     target: { tabId },
     files: ['src/css/contextMenu.css']
   });
-  
-  // Wstrzyknij skrypty w odpowiedniej kolejności
+
+  // Inject scripts in proper order
   await chrome.scripting.executeScript({
     target: { tabId },
     files: ['src/js/data.js']
   });
-  
+
   await chrome.scripting.executeScript({
     target: { tabId },
     files: ['src/js/generators.js']
   });
-  
-  // Na końcu wstrzyknij skrypt obsługujący menu kontekstowe
+
+  // Finally, inject the context menu handling script
   return chrome.scripting.executeScript({
     target: { tabId },
     files: ['src/js/contextMenu.js']
   });
 }
 
-// Funkcja do obsługi akcji menu kontekstowego
+// Function to handle context menu actions
 async function handleContextMenuAction(info, tab, action, dataType = null) {
   try {
-    // Wstrzyknij skrypty, jeśli jeszcze nie zostały wstrzyknięte
+    // Inject scripts if they haven't been injected yet
     await injectScripts(tab.id);
-    
-    // Wyślij odpowiednią akcję do content script
+
+    // Send appropriate action to content script
     if (action === 'refreshData') {
       chrome.tabs.sendMessage(tab.id, { action: 'refreshData' });
     } else if (action === 'insertData' && dataType) {
-      chrome.tabs.sendMessage(tab.id, { 
+      chrome.tabs.sendMessage(tab.id, {
         action: 'insertData',
         dataType
       });
     }
   } catch (error) {
-    console.error('Błąd podczas obsługi akcji menu kontekstowego:', error);
+    console.error('Error while handling context menu action:', error);
   }
 }
 
-// Obsługa kliknięcia w pozycję menu
+// Handle menu item click
 chrome.contextMenus.onClicked.addListener((info, tab) => {
-  // Sprawdź, czy kliknięto w pozycję menu
+  // Check if refresh data menu item was clicked
   if (info.menuItemId === 'refreshData') {
     handleContextMenuAction(info, tab, 'refreshData');
     return;
   }
-  
-  // Sprawdź, czy kliknięto w pozycję z danymi
+
+  // Check if data item was clicked
   const [categoryId, itemId] = info.menuItemId.split('_');
   if (categoryId && itemId) {
-    // Znajdź kategorię i pozycję
+    // Find category and item
     const category = Object.values(CATEGORIES).find(cat => cat.id === categoryId);
     if (category) {
       const item = category.children.find(it => it.id === itemId);
@@ -185,12 +185,12 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
   }
 });
 
-// Inicjalizacja menu kontekstowego przy instalacji lub aktualizacji rozszerzenia
+// Initialize context menu on extension installation or update
 chrome.runtime.onInstalled.addListener(() => {
   initContextMenus();
 });
 
-// Nasłuchuj na komunikaty od content script
+// Listen for messages from content script
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'getContextMenuState') {
     sendResponse({ enabled: true });

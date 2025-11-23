@@ -1,8 +1,8 @@
 /**
- * Style dla animacji wstawienia danych
+ * Styles for data insertion animation
  */
 
-/* Animacja wstawienia danych */
+/* Data insertion animation */
 @keyframes insertSuccess {
   0% {
     background-color: rgba(76, 175, 80, 0.2);
@@ -16,7 +16,7 @@
   animation: insertSuccess 1s ease-out;
 }
 
-/* Obsługa trybu ciemnego */
+/* Dark mode support */
 @media (prefers-color-scheme: dark) {
   @keyframes insertSuccess {
     0% {

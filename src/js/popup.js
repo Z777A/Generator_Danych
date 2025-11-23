@@ -1,35 +1,35 @@
 /**
- * Skrypt obsługujący interfejs użytkownika rozszerzenia
+ * Script handling the extension's user interface
  */
 
-// Inicjalizacja po załadowaniu DOM
+// Initialize after DOM loads
 document.addEventListener('DOMContentLoaded', function () {
-  // Inicjalizacja generatora danych
+  // Initialize data generator
   let generator = new PolishDataGenerator();
 
-  // Wypełnij formularz danymi
+  // Fill form with data
   fillFormWithData(generator);
 
-  // Obsługa przełączania zakładek
+  // Handle tab switching
   setupTabs();
 
-  // Obsługa przycisku generowania
+  // Handle generate button
   document.getElementById('generateBtn').addEventListener('click', function () {
     generator = new PolishDataGenerator();
     fillFormWithData(generator);
   });
 
-  // Obsługa przycisków kopiowania
+  // Handle copy buttons
   setupCopyButtons();
-  // Obsługa przycisku "Kopiuj wszystko"
+  // Handle "Copy all" button
   document.getElementById('copyAllBtn').addEventListener('click', function () {
     copyAllData(generator);
   });
 
-  // Zapisz dane w pamięci lokalnej
+  // Save data in local storage
   saveDataToStorage(generator);
 
-  // Obsługa przycisku sugestii
+  // Handle suggestion button
   const suggestionBtn = document.querySelector('.suggestion-btn');
   if (suggestionBtn) {
     suggestionBtn.addEventListener('click', function (e) {
@@ -37,30 +37,33 @@ document.addEventListener('DOMContentLoaded', function () {
       chrome.tabs.create({ url: this.href });
     });
   }
+
+  // Handle themes
+  setupThemeSwitcher();
 });
 
 function fillFormWithData(generator) {
-  // Dane osobowe
+  // Personal data
   document.getElementById('fullName').value = generator.person.fullName;
   document.getElementById('pesel').value = generator.person.pesel;
   document.getElementById('birthDate').value = generator.person.birthDate;
   document.getElementById('email').value = generator.person.email;
   document.getElementById('phone').value = generator.person.phone;
 
-  // Dane bankowe dla osoby
+  // Bank account data for person
   document.getElementById('bankName').value = generator.bankAccount.bank;
   document.getElementById('iban').value = generator.bankAccount.formattedIban;
   document.getElementById('cardNumber').value = generator.bankAccount.formattedCardNumber;
   document.getElementById('cardDetails').value = `${generator.bankAccount.expiryDate} / ${generator.bankAccount.cvv}`;
 
-  // Adres
+  // Address
   document.getElementById('street').value = generator.address.streetWithNumber;
   document.getElementById('postalCode').value = generator.address.postalCode;
   document.getElementById('city').value = generator.address.city;
   document.getElementById('voivodeship').value = generator.address.voivodeship;
   document.getElementById('fullAddress').value = generator.address.fullAddress;
 
-  // Dokumenty
+  // Documents
   document.getElementById('idCard').value = generator.documents.idCard;
   document.getElementById('idCardIssueDate').value = generator.documents.idCardIssueDate;
   document.getElementById('idCardExpiryDate').value = generator.documents.idCardExpiryDate;
@@ -68,19 +71,19 @@ function fillFormWithData(generator) {
   document.getElementById('passportIssueDate').value = generator.documents.passportIssueDate;
   document.getElementById('passportExpiryDate').value = generator.documents.passportExpiryDate;
 
-  // Firma
+  // Company
   document.getElementById('companyName').value = generator.company.companyName;
   document.getElementById('nip').value = generator.company.nip;
   document.getElementById('regon').value = generator.company.regon;
   document.getElementById('krs').value = generator.company.krs;
 
-  // Dane bankowe dla firmy
+  // Bank account data for company
   document.getElementById('swift').value = generator.company.companySwift;
   document.getElementById('companyIban').value = generator.company.formattedCompanyIban;
 }
 
 /**
- * Konfiguruje obsługę zakładek
+ * Sets up tab handling
  */
 function setupTabs() {
   const tabButtons = document.querySelectorAll('.tab-btn');
@@ -88,23 +91,23 @@ function setupTabs() {
 
   tabButtons.forEach(button => {
     button.addEventListener('click', function () {
-      // Usuń klasę active ze wszystkich przycisków i paneli
+      // Remove active class from all buttons and panels
       tabButtons.forEach(btn => btn.classList.remove('active'));
       tabPanes.forEach(pane => pane.classList.remove('active'));
 
-      // Dodaj klasę active do klikniętego przycisku
+      // Add active class to clicked button
       this.classList.add('active');
 
-      // Aktywuj odpowiedni panel
+      // Activate corresponding panel
       const tabId = this.getAttribute('data-tab');
       document.getElementById(tabId).classList.add('active');
 
-      // Zapisz aktywną zakładkę w pamięci lokalnej
+      // Save active tab in local storage
       chrome.storage.local.set({ activeTab: tabId });
     });
   });
 
-  // Przywróć ostatnio aktywną zakładkę
+  // Restore last active tab
   chrome.storage.local.get('activeTab', function (data) {
     if (data.activeTab) {
       const tabToActivate = document.querySelector(`.tab-btn[data-tab="${data.activeTab}"]`);
@@ -116,34 +119,34 @@ function setupTabs() {
 }
 
 /**
- * Konfiguruje przyciski kopiowania
+ * Sets up copy buttons
  */
 function setupCopyButtons() {
   const copyButtons = document.querySelectorAll('.copy-btn');
 
   copyButtons.forEach(button => {
     button.addEventListener('click', function () {
-      // Pobierz ID pola do skopiowania
+      // Get ID of field to copy
       const targetId = this.getAttribute('data-target');
       const targetInput = document.getElementById(targetId);
 
-      // Kopiuj tekst do schowka
+      // Copy text to clipboard
       copyToClipboard(targetInput.value);
 
-      // Pokaż informację o skopiowaniu
+      // Show copy notification
       showCopyTooltip(this);
     });
   });
 }
 
 /**
- * Kopiuje wszystkie dane do schowka
+ * Copies all data to clipboard
  */
 function copyAllData(generator) {
-  // Przygotuj tekst ze wszystkimi danymi
+  // Prepare text with all data
   let allData = '';
 
-  // Dane osobowe
+  // Personal data
   allData += 'DANE OSOBOWE:\n';
   allData += `Imię i nazwisko: ${generator.person.fullName}\n`;
   allData += `PESEL: ${generator.person.pesel}\n`;
@@ -151,14 +154,14 @@ function copyAllData(generator) {
   allData += `Email: ${generator.person.email}\n`;
   allData += `Telefon: ${generator.person.phone}\n\n`;
 
-  // Dane bankowe dla osoby
+  // Bank account data for person
   allData += 'DANE BANKOWE:\n';
   allData += `Bank: ${generator.bankAccount.bank}\n`;
   allData += `IBAN: ${generator.bankAccount.formattedIban}\n`;
   allData += `Numer karty: ${generator.bankAccount.formattedCardNumber}\n`;
   allData += `Szczegóły karty: ${generator.bankAccount.expiryDate} / ${generator.bankAccount.cvv}\n\n`;
 
-  // Adres
+  // Address
   allData += 'ADRES:\n';
   allData += `Ulica i numer: ${generator.address.streetWithNumber}\n`;
   allData += `Kod pocztowy: ${generator.address.postalCode}\n`;
@@ -166,7 +169,7 @@ function copyAllData(generator) {
   allData += `Województwo: ${generator.address.voivodeship}\n`;
   allData += `Pełny adres: ${generator.address.fullAddress}\n\n`;
 
-  // Dokumenty
+  // Documents
   allData += 'DOKUMENTY:\n';
   allData += `Dowód osobisty: ${generator.documents.idCard}\n`;
   allData += `Data wydania dowodu: ${generator.documents.idCardIssueDate}\n`;
@@ -175,32 +178,32 @@ function copyAllData(generator) {
   allData += `Data wydania paszportu: ${generator.documents.passportIssueDate}\n`;
   allData += `Data ważności paszportu: ${generator.documents.passportExpiryDate}\n\n`;
 
-  // Firma
+  // Company
   allData += 'FIRMA:\n';
   allData += `Nazwa firmy: ${generator.company.companyName}\n`;
   allData += `NIP: ${generator.company.nip}\n`;
   allData += `REGON: ${generator.company.regon}\n`;
   allData += `KRS: ${generator.company.krs}\n`;
 
-  // Dane bankowe dla firmy
+  // Bank account data for company
   allData += 'DANE BANKOWE FIRMY:\n';
   allData += `Bank: ${generator.company.companyBank}\n`;
   allData += `SWIFT: ${generator.company.companySwift}\n`;
   allData += `IBAN: ${generator.company.formattedCompanyIban}\n`;
 
-  // Kopiuj do schowka
+  // Copy to clipboard
   copyToClipboard(allData);
 
-  // Pokaż informację o skopiowaniu
+  // Show copy notification
   const copyAllBtn = document.getElementById('copyAllBtn');
   showCopyTooltip(copyAllBtn);
 }
 
 /**
- * Kopiuje tekst do schowka
+ * Copies text to clipboard
  */
 function copyToClipboard(text) {
-  // Tworzymy tymczasowy element textarea
+  // Create temporary textarea element
   const textarea = document.createElement('textarea');
   textarea.value = text;
   textarea.setAttribute('readonly', '');
@@ -208,22 +211,22 @@ function copyToClipboard(text) {
   textarea.style.left = '-9999px';
   document.body.appendChild(textarea);
 
-  // Zaznacz tekst i skopiuj
+  // Select text and copy
   textarea.select();
   document.execCommand('copy');
 
-  // Usuń tymczasowy element
+  // Remove temporary element
   document.body.removeChild(textarea);
 }
 
 /**
- * Pokazuje tooltip informujący o skopiowaniu
+ * Shows tooltip informing about copying
  */
 function showCopyTooltip(button) {
-  // Dodaj klasę tooltip do przycisku
+  // Add tooltip class to button
   button.classList.add('tooltip');
 
-  // Utwórz element tooltip jeśli nie istnieje
+  // Create tooltip element if it doesn't exist
   if (!button.querySelector('.tooltip-text')) {
     const tooltip = document.createElement('span');
     tooltip.className = 'tooltip-text';
@@ -231,18 +234,40 @@ function showCopyTooltip(button) {
     button.appendChild(tooltip);
   }
 
-  // Pokaż tooltip
+  // Show tooltip
   button.classList.add('show');
 
-  // Ukryj tooltip po 2 sekundach
+  // Hide tooltip after 2 seconds
   setTimeout(() => {
     button.classList.remove('show');
   }, 2000);
 }
 
 /**
- * Zapisuje dane w pamięci lokalnej
+ * Saves data in local storage
  */
 function saveDataToStorage(generator) {
   chrome.storage.local.set({ lastGeneratedData: generator });
-} 
+}
+
+/**
+ * Sets up theme switcher
+ */
+function setupThemeSwitcher() {
+  const themeSelect = document.getElementById('themeSelect');
+  // Handle theme change
+  if (themeSelect) {
+    themeSelect.addEventListener('change', function () {
+      const selectedTheme = this.value;
+
+      // Remove all theme classes
+      document.body.className = '';
+
+      // Add new class
+      document.body.classList.add(`theme-${selectedTheme}`);
+
+      // Save choice
+      chrome.storage.local.set({ theme: selectedTheme });
+    });
+  }
+}
