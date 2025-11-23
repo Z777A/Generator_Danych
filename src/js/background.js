@@ -3,6 +3,9 @@
  * Responsible for creating context menu items in the browser
  */
 
+// Cross-browser compatibility
+const api = (typeof browser !== 'undefined') ? browser : chrome;
+
 // Data categories
 const CATEGORIES = {
   PERSONAL: {
@@ -70,17 +73,17 @@ const CONTEXT_TYPES = ['editable'];
 // Function to initialize context menu
 function initContextMenus() {
   // Remove all existing menu items
-  chrome.contextMenus.removeAll();
+  api.contextMenus.removeAll();
 
   // Create main menu item
-  chrome.contextMenus.create({
+  api.contextMenus.create({
     id: 'polishDataGenerator',
     title: 'Wstaw dane testowe',
     contexts: CONTEXT_TYPES
   });
 
   // Create refresh data menu item
-  chrome.contextMenus.create({
+  api.contextMenus.create({
     id: 'refreshData',
     parentId: 'polishDataGenerator',
     title: '🔄 Wygeneruj nowe dane',
@@ -88,7 +91,7 @@ function initContextMenus() {
   });
 
   // Add separator
-  chrome.contextMenus.create({
+  api.contextMenus.create({
     id: 'separator1',
     parentId: 'polishDataGenerator',
     type: 'separator',
@@ -98,7 +101,7 @@ function initContextMenus() {
   // Create categories and their items
   Object.values(CATEGORIES).forEach(category => {
     // Create category
-    chrome.contextMenus.create({
+    api.contextMenus.create({
       id: category.id,
       parentId: 'polishDataGenerator',
       title: category.title,
@@ -107,7 +110,7 @@ function initContextMenus() {
 
     // Create items in category
     category.children.forEach(item => {
-      chrome.contextMenus.create({
+      api.contextMenus.create({
         id: `${category.id}_${item.id}`,
         parentId: category.id,
         title: item.title,
@@ -120,24 +123,24 @@ function initContextMenus() {
 // Function for dynamically injecting scripts
 async function injectScripts(tabId) {
   // Inject styles
-  await chrome.scripting.insertCSS({
+  await api.scripting.insertCSS({
     target: { tabId },
     files: ['src/css/contextMenu.css']
   });
 
   // Inject scripts in proper order
-  await chrome.scripting.executeScript({
+  await api.scripting.executeScript({
     target: { tabId },
     files: ['src/js/data.js']
   });
 
-  await chrome.scripting.executeScript({
+  await api.scripting.executeScript({
     target: { tabId },
     files: ['src/js/generators.js']
   });
 
   // Finally, inject the context menu handling script
-  return chrome.scripting.executeScript({
+  return api.scripting.executeScript({
     target: { tabId },
     files: ['src/js/contextMenu.js']
   });
@@ -151,9 +154,9 @@ async function handleContextMenuAction(info, tab, action, dataType = null) {
 
     // Send appropriate action to content script
     if (action === 'refreshData') {
-      chrome.tabs.sendMessage(tab.id, { action: 'refreshData' });
+      api.tabs.sendMessage(tab.id, { action: 'refreshData' });
     } else if (action === 'insertData' && dataType) {
-      chrome.tabs.sendMessage(tab.id, {
+      api.tabs.sendMessage(tab.id, {
         action: 'insertData',
         dataType
       });
@@ -164,7 +167,7 @@ async function handleContextMenuAction(info, tab, action, dataType = null) {
 }
 
 // Handle menu item click
-chrome.contextMenus.onClicked.addListener((info, tab) => {
+api.contextMenus.onClicked.addListener((info, tab) => {
   // Check if refresh data menu item was clicked
   if (info.menuItemId === 'refreshData') {
     handleContextMenuAction(info, tab, 'refreshData');
@@ -186,12 +189,12 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 });
 
 // Initialize context menu on extension installation or update
-chrome.runtime.onInstalled.addListener(() => {
+api.runtime.onInstalled.addListener(() => {
   initContextMenus();
 });
 
 // Listen for messages from content script
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+api.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'getContextMenuState') {
     sendResponse({ enabled: true });
   }

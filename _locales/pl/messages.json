@@ -1,10 +1,10 @@
 {
   "extensionName": {
-    "message": "Generator Danych Testowych - PESEL, NIP, Dowód (Polska)",
+    "message": "Generator Danych Testowych - PESEL, NIP, Dowód (PL)",
     "description": "Nazwa rozszerzenia"
   },
   "extensionDescription": {
-    "message": "Jednym kliknięciem generuj poprawne numery PESEL, NIP, REGON i polskie dane osobowe. Niezbędnik dla Testerów i Programistów.",
+    "message": "Jednym kliknięciem generuj poprawne numery PESEL, NIP, REGON i polskie dane osobowe. Dla Testerów i Programistów.",
     "description": "Opis rozszerzenia"
   }
 }

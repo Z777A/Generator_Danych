@@ -1,4 +1,10 @@
 {
+  "scripts": {
+    "build:chrome": "copy manifest.chrome.json manifest.json",
+    "build:firefox": "copy manifest.firefox.json manifest.json",
+    "pack:chrome": "npm run build:chrome && tar -a -c -f generator-danych-chrome.zip manifest.json src _locales",
+    "pack:firefox": "npm run build:firefox && tar -a -c -f generator-danych-firefox.zip manifest.json src _locales"
+  },
   "dependencies": {
     "canvas": "^3.1.0"
   }

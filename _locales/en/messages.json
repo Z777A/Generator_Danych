@@ -1,10 +1,10 @@
 {
   "extensionName": {
-    "message": "Polish Test Data Generator - PESEL, NIP, ID (Poland)",
+    "message": "Polish Test Data Generator - PESEL, NIP, ID (PL)",
     "description": "Extension name"
   },
   "extensionDescription": {
-    "message": "Generate valid Polish PESEL, NIP, REGON numbers and personal data with one click. Essential tool for Testers and Developers.",
+    "message": "Generate valid Polish PESEL, NIP, REGON numbers and personal data with one click. Tool for Testers and Developers.",
     "description": "Extension description"
   }
 }
