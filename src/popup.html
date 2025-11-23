@@ -11,14 +11,20 @@
 </head>
 
 <body>
+  <div class="app-wrapper">
   <div class="container">
     <header>
       <h1>Generator Danych</h1>
-      <div class="theme-selector">
-        <select id="themeSelect" aria-label="Wybierz motyw">
-          <option value="modern">Modern</option>
-          <option value="neon">Neon</option>
-        </select>
+      <div class="header-controls">
+        <button id="openInTabBtn" class="icon-btn" title="Otwórz w nowej karcie">
+          <i class="material-icons">open_in_new</i>
+        </button>
+        <div class="theme-selector">
+          <select id="themeSelect" aria-label="Wybierz motyw">
+            <option value="modern">Modern</option>
+            <option value="neon">Neon</option>
+          </select>
+        </div>
       </div>
     </header>
 

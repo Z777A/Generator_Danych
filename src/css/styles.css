@@ -65,14 +65,18 @@ body {
   /* Ensure gradient covers full height */
 }
 
-.container {
+.app-wrapper {
   width: 400px;
+  margin: 0 auto;
+}
+
+.container {
+  width: 100%;
+  min-height: 600px;
   padding: 24px;
   background-color: var(--bg-secondary);
-
   box-shadow: var(--shadow);
   border-radius: var(--radius);
-  margin: 0 auto;
   transition: var(--transition);
 }
 
@@ -91,6 +95,35 @@ h1 {
   font-weight: 700;
   color: var(--primary-color);
   text-shadow: var(--text-shadow, none);
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-btn {
+  background: var(--input-bg);
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
+  padding: 6px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.icon-btn:hover {
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.icon-btn i {
+  font-size: 20px;
 }
 
 .theme-selector select {
@@ -360,4 +393,19 @@ footer {
 .tooltip.show .tooltip-text {
   visibility: visible;
   opacity: 1;
+}
+
+/* Full-screen mode (when opened in tab) */
+body.fullscreen-mode {
+  padding: 40px 20px;
+}
+
+body.fullscreen-mode .app-wrapper {
+  width: 800px;
+  max-width: 90vw;
+  margin: 0 auto;
+}
+
+body.fullscreen-mode .container {
+  min-height: auto;
 }

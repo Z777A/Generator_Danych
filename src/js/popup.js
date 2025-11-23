@@ -4,6 +4,11 @@
 
 // Initialize after DOM loads
 document.addEventListener('DOMContentLoaded', function () {
+  // Check if opened in tab (fullscreen mode)
+  if (window.location.search.includes('tab=true')) {
+    document.body.classList.add('fullscreen-mode');
+  }
+
   // Initialize data generator
   let generator = new PolishDataGenerator();
 
@@ -35,6 +40,22 @@ document.addEventListener('DOMContentLoaded', function () {
     suggestionBtn.addEventListener('click', function (e) {
       e.preventDefault();
       chrome.tabs.create({ url: this.href });
+    });
+  }
+
+  // Handle "Open in new tab" button
+  const openInTabBtn = document.getElementById('openInTabBtn');
+  if (openInTabBtn) {
+    // Hide button if already in a tab (not popup)
+    if (window.location.search.includes('tab=true')) {
+      openInTabBtn.style.display = 'none';
+    }
+
+    openInTabBtn.addEventListener('click', function () {
+      const url = chrome.runtime.getURL('src/popup.html?tab=true');
+      chrome.tabs.create({ url: url });
+      // Close popup after opening tab
+      window.close();
     });
   }
 
@@ -255,15 +276,25 @@ function saveDataToStorage(generator) {
  */
 function setupThemeSwitcher() {
   const themeSelect = document.getElementById('themeSelect');
-  // Handle theme change
+
   if (themeSelect) {
+    // Load saved theme
+    chrome.storage.local.get(['theme'], function (result) {
+      if (result.theme) {
+        themeSelect.value = result.theme;
+        document.body.classList.remove('theme-modern', 'theme-neon');
+        document.body.classList.add(`theme-${result.theme}`);
+      }
+    });
+
+    // Handle theme change
     themeSelect.addEventListener('change', function () {
       const selectedTheme = this.value;
 
-      // Remove all theme classes
-      document.body.className = '';
+      // Remove only theme classes, keep other classes (like fullscreen-mode)
+      document.body.classList.remove('theme-modern', 'theme-neon');
 
-      // Add new class
+      // Add new theme class
       document.body.classList.add(`theme-${selectedTheme}`);
 
       // Save choice
