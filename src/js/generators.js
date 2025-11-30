@@ -101,11 +101,11 @@ class PolishDataGenerator {
   generateDocuments() {
     // Generate ID card (new format from 2019)
     const idCardSeries = this.generateRandomLetters(3).toUpperCase();
-    const idCardNumber = this.generateRandomDigits(4);
+    const idCardNumber = this.generateRandomDigits(5);
 
     // Calculate check digit for ID card
     // Validation algorithm compliant with Polish standards
-    const weights = [7, 3, 1, 9, 7, 3, 1, 7, 3];
+    const weights = [7, 3, 1, 7, 3, 1, 7, 3];
     const idCardChars = (idCardSeries + idCardNumber).split('');
     let sum = 0;
 
@@ -117,7 +117,7 @@ class PolishDataGenerator {
     }
 
     const checkDigit = sum % 10;
-    const idCard = `${idCardSeries}${idCardNumber}`;
+    const idCard = `${idCardSeries}${checkDigit}${idCardNumber}`;
 
     // Generate dates for ID card
     const idCardIssueDate = this.generatePastDate(5);
@@ -457,7 +457,7 @@ class PolishDataGenerator {
       let digit = digits[i];
 
       // Every second digit (from right) is doubled
-      if ((digits.length - i) % 2 === 0) {
+      if ((digits.length - i) % 2 !== 0) {
         digit *= 2;
         if (digit > 9) {
           digit -= 9;
